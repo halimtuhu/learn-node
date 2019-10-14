@@ -45,7 +45,7 @@ Belajar membuat CRUD di Express.js dengan studi kasus membuat Mini Blog. Silahka
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'blog'
+        database: 'nodeapp'
     })
 
     // connect to db
@@ -64,7 +64,11 @@ Belajar membuat CRUD di Express.js dengan studi kasus membuat Mini Blog. Silahka
         extended: false
     }))
 
+    // set public folder
+    app.use('/assets', express.static(__dirname + '/public'))
+
     // routes
+    // index : post list
     app.get('/', (req, res) => {
         let sql = 'select * from posts'
         let query = conn.query(sql, (err, results) => {
@@ -75,6 +79,7 @@ Belajar membuat CRUD di Express.js dengan studi kasus membuat Mini Blog. Silahka
         })
     })
 
+    // save new post
     app.post('/posts', (req, res) => {
         let data = {
             title: req.body.title,
@@ -82,6 +87,24 @@ Belajar membuat CRUD di Express.js dengan studi kasus membuat Mini Blog. Silahka
         }
         let sql = 'insert into posts set ?'
         let query = conn.query(sql, data, (err, results) => {
+            if (err) throw err
+            res.redirect('/')
+        })
+    })
+
+    // update post
+    app.post('/posts/edit', (req, res) => {
+        let sql = 'update posts set title="'+req.body.title+'", content="'+req.body.content+'" where id='+req.body.id
+        let query = conn.query(sql, (err, results) => {
+            if (err) throw err
+            res.redirect('/')
+        })
+    })
+
+    // delete post
+    app.post('/posts/delete', (req, res) => {
+        let sql = 'delete from posts where id='+req.body.id+''
+        let query = conn.query(sql, (err, results) => {
             if (err) throw err
             res.redirect('/')
         })
@@ -130,8 +153,8 @@ Belajar membuat CRUD di Express.js dengan studi kasus membuat Mini Blog. Silahka
                             <td>{{ content }}</td>
                             <td>{{ created_at }}</td>
                             <td>
-                                <button type="button" class="btn btn-warning btn-sm m-1">Edit</button>
-                                <button type="button" class="btn btn-danger btn-sm m-1">Delete</button>
+                                <button type="button" class="btn btn-warning btn-sm m-1 edit-post" data-id="{{ id }}" data-title="{{ title }}" data-content="{{ content }}">Edit</button>
+                                <button type="button" class="btn btn-danger btn-sm m-1 delete-post" data-id="{{ id }}">Delete</button>
                             </td>
                         </tr>
                         {{/each}}
@@ -166,12 +189,79 @@ Belajar membuat CRUD di Express.js dengan studi kasus membuat Mini Blog. Silahka
             </div>
         </div>
 
+        <div id="editPostModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">Edit Post</div>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/posts/edit" method="POST">
+                            <input type="hidden" name="id" id="edit_id">
+                            <div class="form-group">
+                                <label for="edit_title">Title</label>
+                                <input type="text" class="form-control" name="title" id="edit_title">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_content">Content</label>
+                                <textarea name="content" id="edit_content" class="form-control" rows="10"></textarea>
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary" type="submit">Update Post</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="deletePostModal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">Delete Post Confirmation</div>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/posts/delete" method="POST">
+                            <div class="form-group">
+                                <p>Apakah anda yakin ingin menghapus post ini ?</p>
+                                <input type="hidden" id="delete_id" name="id">
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary" type="submit">Delete Post</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         
         <script>
-            
+            $('.edit-post').on('click', function () {
+                var id = $(this).data('id')
+                var title = $(this).data('title')
+                var content = $(this).data('content')
+
+                $('#editPostModal').modal('show')
+                
+                $('#edit_id').val(id)
+                $('#edit_title').val(title)
+                $('#edit_content').val(content)
+            })
+
+            $('.delete-post').on('click', function () {
+                var id = $(this).data('id')
+
+                $('#deletePostModal').modal('show')
+
+                $('#delete_id').val(id)
+            })
         </script>
     </body>
 
