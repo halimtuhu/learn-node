@@ -45,7 +45,7 @@ Belajar membuat CRUD di Express.js dengan studi kasus membuat Mini Blog. Silahka
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'nodeapp'
+        database: 'blog'
     })
 
     // connect to db
