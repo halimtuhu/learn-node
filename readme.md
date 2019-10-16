@@ -2,8 +2,8 @@
 
 Belajar Node.js bareng
 
-1. [HTTP Server](https://github.com/halimtuhu/learn-node/http-server.md)
-2. [CRUD](https://github.com/halimtuhu/learn-node/crud.md)
+1. [HTTP Server](https://github.com/halimtuhu/learn-node/blob/master/http-server.md)
+2. [CRUD](https://github.com/halimtuhu/learn-node/blob/master/crud.md)
 
 # Become Contributor
 Jika ingin berkontribusi silahkan lakukan langkah-langkah berikut.
