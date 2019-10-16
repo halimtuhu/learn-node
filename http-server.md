@@ -59,3 +59,7 @@ Memulai service backend dengan membuat project baru bernama `http-server`.
             break
     }
    ```
+   
+## Summary
+Secara keseluruhan struktur kode dari `app.js` adalah sebagai berikut
+https://gist.github.com/halimtuhu/d26710a715b9fc0e86a96039c75559fe
