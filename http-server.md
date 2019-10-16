@@ -62,5 +62,35 @@ Memulai service backend dengan membuat project baru bernama `http-server`.
    
 ## Summary
 Secara keseluruhan struktur kode dari `app.js` adalah sebagai berikut
+```js
+const http = require('http')
 
-<script src="https://gist.github.com/halimtuhu/d26710a715b9fc0e86a96039c75559fe.js"></script>
+const server = http.createServer(function (request, response) {
+
+    // if (request.url == '/') {
+    //     response.write('Welcome Home')
+    // } else if (request.url == '/about') {
+    //     response.write('About Us')
+    // } else {
+    //     response.status = 404
+    //     response.write('URL no found')
+    // }
+
+    switch (request.url) {
+        case '/':
+            response.write('Welcome Home')
+            break
+        case '/about':
+            response.write('About Us')
+            break
+        default :
+            response.write('404. Not Found')
+            break
+    }
+
+    response.end()
+
+}).listen(3000)
+
+console.log('Server is running at port 3000')
+```
